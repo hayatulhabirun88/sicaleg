@@ -1,7 +1,14 @@
 <div class="container-fluid">
     <h1 class="text-center">PERHITUNGAN SUARA</h1>
 
-    <div class="row" id="suara">
+    <div class="row" id="persentasi_suara">
+    </div>
+
+    <div class="row mt-3" id="suara">
+    </div>
+
+    <div class="row" id="persentasi_suara_tps" style="padding:10px;background-color:yellow;font-weight:bold;margin:10px;">
+
     </div>
 
     <script >
@@ -10,9 +17,7 @@
 
             setInterval(() => {
                 hitung_suara();
-            }, 5000);
-
-
+            }, 1000);
 
         });
 
@@ -29,7 +34,9 @@
                 },
                 success: function (response) {
 
-                    $('#suara').html(response.html);
+                    $('#suara').html(response.html.jmlSuara);
+                    $('#persentasi_suara').html(response.html.persentasiSuara);
+                    $('#persentasi_suara_tps').html(response.html.persentasiSuaraTPS);
                 },
                 error: function(xhr, status, error) {
 

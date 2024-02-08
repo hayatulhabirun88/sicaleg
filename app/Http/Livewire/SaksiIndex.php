@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Tps;
 use App\Models\Saksi;
+use App\Models\Suara;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -96,6 +97,13 @@ class SaksiIndex extends Component
         }
 
         $saksi = Saksi::findOrFail($this->saksiId);
+
+        $suara = Suara::where('tps_id', $saksi->tps_id)->get();
+        foreach ($suara as $s) {
+            $s->saksi_id = NULL;
+            $s->update();
+        }
+
         $saksi->nama_lengkap = $this->name;
         $saksi->alamat = $this->alamat;
         $saksi->no_hp = $this->no_hp;
@@ -103,6 +111,7 @@ class SaksiIndex extends Component
         $saksi->status = $status;
 
         $saksi->update();
+
 
         session()->flash('success', 'Data Saksi berhasil update.');
         $this->closeModal();
@@ -126,9 +135,6 @@ class SaksiIndex extends Component
     public function delete($id)
     {
         $saksi = Saksi::findOrFail($id);
-
-        $saksi->delete();
-
         session()->flash('success', 'Data Saksi berhasil dihapus.');
     }
 

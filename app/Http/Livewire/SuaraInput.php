@@ -18,43 +18,46 @@ class SuaraInput extends Component
         $this->selectedPartai = Caleg::where('partai_id', $this->partaiId)->get();
     }
 
-    public function create()
+    public function updatedJumlahSuara()
     {
-        foreach ($this->jumlahSuara as $pId => $jml) {
-            foreach ($jml as $k => $value) {
-                if ($k == 0) {
-                    $suaraPartai = Suara::where('tps_id', $this->tps)->where('partai_id', $pId)->where('caleg_id', 0)->first();
-                    if ($suaraPartai) {
-                        $suaraPartai->jumlah = preg_replace("/[^0-9]/","",$value);
-                        $suaraPartai->update();
-                    } else {
-                        Suara::firstOrCreate([
-                            'saksi_id' => NULL,
-                            'caleg_id' => 0,
-                            'tps_id' => $this->tps,
-                            'partai_id' => $pId,
-                            'jumlah' => preg_replace("/[^0-9]/","",$value)
-                        ]);
+            foreach ($this->jumlahSuara as $pId => $jml) {
+                foreach ($jml as $k => $value) {
+                    $jmlSuara = preg_replace("/[^0-9]/","",$value);
+                    if ($jmlSuara == "") {
+                        $jmlSuara = 0;
                     }
-                } else {
-                    $suara = Suara::where('tps_id', $this->tps)->where('partai_id', $pId)->where('caleg_id', $k)->first();
-                    if ($suara) {
-                        $suara->jumlah = preg_replace("/[^0-9]/","",$value);
-                        $suara->update();
+                    if ($k == 0) {
+                        $suaraPartai = Suara::where('tps_id', $this->tps)->where('partai_id', $pId)->where('caleg_id', 0)->first();
+                        if ($suaraPartai) {
+                            $suaraPartai->jumlah = $jmlSuara;
+                            $suaraPartai->update();
+                        } else {
+
+                            Suara::firstOrCreate([
+                                'saksi_id' => NULL,
+                                'caleg_id' => 0,
+                                'tps_id' => $this->tps,
+                                'partai_id' => $pId,
+                                'jumlah' => $jmlSuara
+                            ]);
+                        }
                     } else {
-                        Suara::firstOrCreate([
-                            'saksi_id' => NULL,
-                            'caleg_id' => $k,
-                            'tps_id' => $this->tps,
-                            'partai_id' => $pId,
-                            'jumlah' => preg_replace("/[^0-9]/","",$value)
-                        ]);
+                        $suara = Suara::where('tps_id', $this->tps)->where('partai_id', $pId)->where('caleg_id', $k)->first();
+                        if ($suara) {
+                            $suara->jumlah = $jmlSuara;
+                            $suara->update();
+                        } else {
+                            Suara::firstOrCreate([
+                                'saksi_id' => NULL,
+                                'caleg_id' => $k,
+                                'tps_id' => $this->tps,
+                                'partai_id' => $pId,
+                                'jumlah' => $jmlSuara
+                            ]);
+                        }
                     }
                 }
             }
-        }
-
-        $this->resetInputs();
     }
 
     public function resetInputs()

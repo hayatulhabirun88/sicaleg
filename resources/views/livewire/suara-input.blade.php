@@ -8,7 +8,8 @@
                     name="tps"
                     id="tps"
                     wire:model="tps"
-                >
+                    wire:change = "resetInputs"
+                >   
                     <option value="">-- Pilih TPS --</option>
                     @foreach($selectTps as $stps)
                         <option value="{{ $stps->id}}">TPS {{ $stps->name}} {{ $stps->kelurahan}} </option>
@@ -139,6 +140,4 @@
         @endforeach
         
     </div>
-    <input type="submit" wire:click="create" value = "Submit" class="btn btn-primary"><br><br>
-    @error('jumlahSuara') <p class="alert alert-danger">{{ $message }}</p> @enderror
 </div>
